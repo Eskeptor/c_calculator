@@ -10,7 +10,7 @@
 #define MAX 50
 #define SUM(X,Y) (X)+(Y)
 #define MULTI(X,Y) (X)*(Y)
-#define DIV(X,Y) (X)/(Y)
+#define DIV(X,Y) (Y)/(X)
 
 typedef struct _Stack {
 	char Operator[MAX];
@@ -79,6 +79,7 @@ void calEngine(char Exp[], int len) {
 	// flag는 빼기 연산을 판단할겁니다.
 	for (int i = 0; i < len; i++) {
 		ch = Exp[i];
+		printf("%c \n", ch);
 		if (ch == ' ') // 공백의 경우에는 그냥 넘김
 			continue;
 		else if (ch >= '0' && ch <= '9') { // 숫자일 때
@@ -90,12 +91,15 @@ void calEngine(char Exp[], int len) {
 					flag = 0;
 					// 빼기연산 판단 변수를 다시 0으로 만들어줍니다.
 					opdPush(-atoi(tmpExp));
+					printf("opdPush : %d \n", -atoi(tmpExp));
 					// atoi는 문자열을 숫자로 바꿔주는 함수입니다.
 					// 빼기 연산을 하지 않고 입력된 수를 음수로 바꿔줍니다.
 					// 나머지 설명은 아래에서..
 				}
-				else
+				else {
 					opdPush(atoi(tmpExp));
+					printf("opdPush : %d \n", atoi(tmpExp));
+				}
 				// 빼기연산이 아니면 그냥 숫자로 넣어줍니다.
 				resetExpression(tmpExp, tmpCnt);
 				// tmpExp의 내용을 초기화시켜줍니다.
@@ -125,7 +129,9 @@ void calEngine(char Exp[], int len) {
 				if (optCheck(opt, ch)) { // 그리고 연산자 우선순위를 이전 연산자(opt)와 현재 연산자(ch)를 비교하여 계산한다.
 					opd2 = opdPop();
 					opd1 = opdPop();
+					printf("else if : opd2 : %d, opd1 : %d \n", opd2, opd2);
 					res = calFunc(opd1, opd2, opt);
+					printf("else if : res = %d \n", res);
 					opdPush(res);
 					optPush(ch);
 				}
@@ -155,7 +161,9 @@ void calEngine(char Exp[], int len) {
 		opd1 = opdPop();
 		opd2 = opdPop();
 		opt = optPop();
+		printf("opd2 : %d, opd1 : %d, opt : %c \n", opd2, opd1, opt);
 		res = calFunc(opd1, opd2, opt);
+		printf("res = %d \n", res);
 		opdPush(res);
 	}
 }
